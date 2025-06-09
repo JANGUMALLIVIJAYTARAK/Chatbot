@@ -29,8 +29,6 @@ api.interceptors.request.use(
              console.warn("API Interceptor: userId not found for non-auth request to", config.url);
         }
 
-        // MODIFIED: Using the Content-Type logic from your provided "modification" block
-        // Do not set Content-Type for FormData, let browser do it
         if (!(config.data instanceof FormData)) {
             config.headers['Content-Type'] = 'application/json';
         }
@@ -44,23 +42,20 @@ api.interceptors.request.use(
 
 // --- Interceptor to handle 401 Unauthorized responses ---
 api.interceptors.response.use(
-    (response) => response, // Pass through successful responses
+    (response) => response,
     (error) => {
         if (error.response && error.response.status === 401) {
             console.warn("API Interceptor: 401 Unauthorized. Clearing auth & redirecting.");
             localStorage.removeItem('sessionId');
             localStorage.removeItem('username');
             localStorage.removeItem('userId');
-            // Check if already on login page to prevent redirection loop
             if (!window.location.pathname.includes('/login')) {
-                 window.location.href = '/login?sessionExpired=true'; // Redirect to login page
+                 window.location.href = '/login?sessionExpired=true';
             }
         }
-        return Promise.reject(error); // Pass error along
+        return Promise.reject(error);
     }
 );
-// --- End Interceptors ---
-
 
 // --- NAMED EXPORTS for API functions ---
 
@@ -68,19 +63,14 @@ api.interceptors.response.use(
 export const signupUser = (userData) => api.post('/auth/signup', userData);
 export const signinUser = (userData) => api.post('/auth/signin', userData);
 
-// Chat Interaction
-// MODIFIED: Comment updated to reflect the payload structure from your "modification" block
-// messageData should include:
-// message: string (this is the current user text, was 'query' in backend payload before)
-// history: array of { role: 'user'/'model', parts: [{text: '...'}] } (this is chatHistory for backend)
-// sessionId: string,
-// systemPrompt: string,
-// isRagEnabled: boolean,
-// llmProvider: string,
-// llmModelName?: string,
-// enableMultiQuery?: boolean
-export const sendMessage = (messageData) => api.post('/chat/message', messageData); // Endpoint is correct
+// --- MODIFICATION START ---
+// Save User's API Keys
+export const saveApiKeys = (keyData) => api.post('/auth/keys', keyData);
+// --- MODIFICATION END ---
 
+
+// Chat Interaction
+export const sendMessage = (messageData) => api.post('/chat/message', messageData);
 export const saveChatHistory = (historyData) => api.post('/chat/history', historyData);
 
 // Chat History Retrieval
@@ -88,7 +78,6 @@ export const getChatSessions = () => api.get('/chat/sessions');
 export const getSessionDetails = (sessionId) => api.get(`/chat/session/${sessionId}`);
 
 // File Upload
-// Pass FormData directly
 export const uploadFile = (formData) => api.post('/upload', formData);
 
 // File Management
@@ -96,15 +85,8 @@ export const getUserFiles = () => api.get('/files');
 export const renameUserFile = (serverFilename, newOriginalName) => api.patch(`/files/${serverFilename}`, { newOriginalName });
 export const deleteUserFile = (serverFilename) => api.delete(`/files/${serverFilename}`);
 
-// Document Analysis --- ADDED THIS SECTION ---
-// analysisData should include:
-// document_text: string,
-// analysis_type: string ('faq', 'topics', 'mindmap'),
-// llm_provider: string,
-// llm_model_name?: string (optional)
+// Document Analysis
 export const analyzeDocument = (analysisData) => api.post('/analysis/document', analysisData);
 
-
 // --- DEFAULT EXPORT ---
-// Export the configured Axios instance if needed for direct use elsewhere
 export default api;

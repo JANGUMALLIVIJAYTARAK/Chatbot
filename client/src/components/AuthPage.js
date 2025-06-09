@@ -1,7 +1,11 @@
 // client/src/components/AuthPage.js
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signinUser, signupUser } from '../services/api';
+// --- MODIFICATION START ---
+import { signinUser, signupUser, saveApiKeys } from '../services/api';
+import ApiKeyModal from './ApiKeyModal'; // Import the new modal component
+// --- MODIFICATION END ---
+
 
 const AuthPage = ({ setIsAuthenticated }) => {
     const [isLogin, setIsLogin] = useState(true);
@@ -11,13 +15,22 @@ const AuthPage = ({ setIsAuthenticated }) => {
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
+    // --- MODIFICATION START ---
+    // State to control the visibility of the API key modal
+    const [showApiKeyModal, setShowApiKeyModal] = useState(false);
+    // State to hold user data temporarily before keys are saved
+    const [tempUser, setTempUser] = useState(null);
+    // --- MODIFICATION END ---
+
     const handleAuth = async (e) => {
         e.preventDefault();
-        setError(''); setLoading(true);
+        setError('');
+        setLoading(true);
 
         if (!username.trim() || !password.trim()) {
             setError('Username and password cannot be empty.');
-            setLoading(false); return;
+            setLoading(false);
+            return;
         }
 
         try {
@@ -26,32 +39,43 @@ const AuthPage = ({ setIsAuthenticated }) => {
             if (isLogin) {
                 response = await signinUser(userData);
             } else {
-                 if (password.length < 6) {
-                     setError('Password must be at least 6 characters long.');
-                     setLoading(false); return;
-                 }
+                if (password.length < 6) {
+                    setError('Password must be at least 6 characters long.');
+                    setLoading(false);
+                    return;
+                }
                 response = await signupUser(userData);
             }
 
-            const { sessionId, username: loggedInUsername, _id: userId } = response.data;
+            // --- MODIFICATION START ---
+            // Destructure all required fields from the response, including the new flag
+            const { sessionId, username: loggedInUsername, _id: userId, hasProvidedApiKeys } = response.data;
 
             if (!userId || !sessionId || !loggedInUsername) {
-                 throw new Error("Incomplete authentication data received from server.");
+                throw new Error("Incomplete authentication data received from server.");
             }
 
-            // Store user info in localStorage
+            // Always store session info immediately, as it's needed for the next step
             localStorage.setItem('sessionId', sessionId);
             localStorage.setItem('username', loggedInUsername);
-            localStorage.setItem('userId', userId); // Store userId
+            localStorage.setItem('userId', userId);
 
-            setIsAuthenticated(true); // Update App state
-            navigate('/chat', { replace: true }); // Redirect to chat page
+            // Check if the user needs to provide API keys
+            if (hasProvidedApiKeys) {
+                // If keys are already provided, proceed as normal
+                setIsAuthenticated(true);
+                navigate('/chat', { replace: true });
+            } else {
+                // If keys are NOT provided, show the modal instead of navigating
+                setTempUser({ username: loggedInUsername }); // Store username for the modal welcome message
+                setShowApiKeyModal(true);
+            }
+            // --- MODIFICATION END ---
 
         } catch (err) {
             const errorMessage = err.response?.data?.message || err.message || `An error occurred during ${isLogin ? 'sign in' : 'sign up'}.`;
             setError(errorMessage);
             console.error("Auth Error:", err.response || err);
-            // Clear potentially invalid items on auth error
             localStorage.removeItem('sessionId');
             localStorage.removeItem('username');
             localStorage.removeItem('userId');
@@ -61,9 +85,25 @@ const AuthPage = ({ setIsAuthenticated }) => {
         }
     };
 
+    // --- MODIFICATION START ---
+    // Handler for the ApiKeyModal's onSave event
+    const handleSaveKeys = async (keyData) => {
+        // The modal's internal state will handle loading/errors display
+        // The saveApiKeys function will automatically use the userId from localStorage via the interceptor
+        await saveApiKeys(keyData);
+
+        // On successful save, complete the authentication flow
+        setIsAuthenticated(true);
+        setShowApiKeyModal(false);
+        navigate('/chat', { replace: true });
+    };
+    // --- MODIFICATION END ---
+
     const toggleMode = () => {
         setIsLogin(!isLogin);
-        setUsername(''); setPassword(''); setError('');
+        setUsername('');
+        setPassword('');
+        setError('');
     };
 
     return (
@@ -98,6 +138,15 @@ const AuthPage = ({ setIsAuthenticated }) => {
                     {isLogin ? 'Need an account? Sign Up' : 'Have an account? Sign In'}
                 </button>
             </div>
+
+            {/* --- MODIFICATION START: Conditionally render the modal --- */}
+            {showApiKeyModal && (
+                <ApiKeyModal
+                    username={tempUser?.username}
+                    onSave={handleSaveKeys}
+                />
+            )}
+            {/* --- MODIFICATION END --- */}
         </div>
     );
 };

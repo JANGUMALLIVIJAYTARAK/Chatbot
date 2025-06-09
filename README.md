@@ -1,3 +1,4 @@
+# Chatbot
   ```env
   PORT=5001 # Port for the backend (make sure it's free)
   MONGO_URI=mongodb://localhost:27017/chatbot_gemini # Your MongoDB connection string
