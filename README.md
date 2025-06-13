@@ -97,3 +97,19 @@ cp .env.example .env
 copy .env.example .env
 
 ```
+
+---
+
+## Step 3: Install Dependencies
+
+### Backend (Node.js)
+
+In the `server` directory, install the required Node.js dependencies:
+
+```bash
+cd server
+npm install
+
+```
+
+---
