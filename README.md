@@ -24,6 +24,13 @@ FusedChatbotNew is a full-stack conversational AI application that integrates a 
 *   **Voice-to-Text Recognition:** Convert spoken input into text for hands-free interaction.
 *   **Chat Deletion:** Delete chat sessions for privacy and clutter management.
 *   **Enhanced UI:** Modern, intuitive interface for a seamless user experience.
+*   ### Tool Featues
+*   Web PDF Downloader: Search and download PDFs from the internet using keywords.
+*   Academic Search: Find academic papers from sources like OpenAlex and Google Scholar.
+*   Markdown to PPTX: Convert structured Markdown into a PowerPoint presentation.
+*   Markdown to DOCX: Create a Word document from selected parts of Markdown content.
+*   OCR Tool: Extract text from PDF files using Tesseract or Nougat OCR engines.
+*   YouTube Downloader: Download video or audio from YouTube in chosen quality.
 
 ---
 
