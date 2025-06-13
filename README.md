@@ -66,8 +66,14 @@ This project uses a scalable **microservice-oriented architecture** to separate 
 
 ## 🚀 Getting Started
 
-### 1. Clone the Repository
+## ⚙️ Setup and Installation
+
+Follow these steps to set up and run the FusedChatbotNew project locally.
+
+### Step 1: Clone the Repository
+
+Clone the project from GitHub and navigate to the project directory:
 
 ```bash
-git clone https://github.com/your-username/FusedChatbotNew.git
+git clone <your-repository-url>
 cd FusedChatbotNew
