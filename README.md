@@ -78,6 +78,8 @@ Clone the project from GitHub and navigate to the project directory:
 git clone <your-repository-url>
 cd FusedChatbotNew
 
+---
+
 ## Step 2: Configure Environment Variables
 
 ### Backend (Node.js)
