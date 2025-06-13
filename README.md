@@ -77,3 +77,18 @@ Clone the project from GitHub and navigate to the project directory:
 ```bash
 git clone <your-repository-url>
 cd FusedChatbotNew
+
+## Step 2: Configure Environment Variables
+
+### Backend (Node.js)
+
+Navigate to the `server` directory and create a `.env` file by copying the example file.
+
+```bash
+cd server
+
+# For Linux/macOS
+cp .env.example .env
+
+# For Windows
+copy .env.example .env
