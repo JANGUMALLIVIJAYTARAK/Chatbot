@@ -10,13 +10,6 @@ FusedChatbotNew is a full-stack conversational AI application that integrates a 
 
 ---
 
-## 📸 Screenshot
-
-![FusedChat UI](path/to/your/screenshot.png)
-*(Replace the path above with a screenshot of your application's main UI)*
-
----
-
 ## ✨ Features
 
 *   **Multi-LLM Support:** Choose from Gemini, Groq LLaMA 3, or Ollama-hosted models for chat interactions.
