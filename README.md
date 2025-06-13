@@ -77,7 +77,7 @@ Clone the project from GitHub and navigate to the project directory:
 ```bash
 git clone <your-repository-url>
 cd FusedChatbotNew
-
+```
 ---
 
 ## Step 2: Configure Environment Variables
@@ -94,3 +94,5 @@ cp .env.example .env
 
 # For Windows
 copy .env.example .env
+
+```
