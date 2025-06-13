@@ -85,6 +85,7 @@ cd FusedChatbotNew
 ### Backend (Node.js)
 
 Navigate to the `server` directory and create a `.env` file by copying the example file.
+Navigate to the `server/ai_core_service` directory and create a `.env` file by copying the example file.
 
 ```bash
 cd server
