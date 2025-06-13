@@ -1,222 +1,214 @@
-Of course. I've reviewed the content from Step 2 onwards and have applied more specific formatting tags to ensure every piece of information is clearly delineated.
+# FusedChatbotNew Setup Guide
 
-I've used headings (#, ##, ###, ####), bulleted and numbered lists (*, 1.), code blocks (```), inline code (), and bolding (`** **`) to structure the entire document. This version adds extra emphasis on key files and commands within the descriptive text, which should address your request for "tags for all the content."
+## Introduction
+FusedChatbotNew is a full-stack chatbot application featuring a React frontend, a Node.js backend, and a Python-based AI core service for handling language model interactions and vector-based document search. This guide provides all the necessary steps to set up the development environment and run the project locally.
 
-Here is the complete and fully-formatted Markdown code in a single block.
-
-# FusedChatbotNew
-
-FusedChatbotNew is a full-stack conversational AI application that integrates a React frontend, Node.js backend, and a Python-based AI core service. It supports multi-LLM interactions, Retrieval Augmented Generation (RAG), document analysis, and user-friendly features like voice-to-text recognition and chat deletion. The application dynamically generates FAQs, topics, and mindmaps based on document size, providing a robust platform for interactive AI-driven conversations.
-
-## Features
-
-*   **Multi-LLM Support**: Choose from Gemini, Groq LLaMA 3, or Ollama-hosted models for chat interactions.
-*   **Retrieval Augmented Generation (RAG)**: Upload documents (PDF, DOCX, PPTX, TXT) to augment chat responses with relevant context, including multi-query RAG for improved recall.
-*   **Document Analysis**:
-    *   **FAQ Generation**: Automatically extracts FAQs based on document content, scaling with document size.
-    *   **Topic Identification**: Identifies key topics with explanations, dynamically adjusted by document length.
-    *   **Mindmap Generation**: Creates hierarchical mindmaps using Mermaid for visualizing document structure.
-*   **Chain-of-Thought (CoT)**: Displays the AI's reasoning process for transparency in responses.
-*   **User Management**: Supports user signup, signin, and session management.
-*   **File Management**: Upload, list, rename, and delete user-specific documents.
-*   **Chat History**: Save and retrieve chat sessions with RAG references and CoT.
-*   **Voice-to-Text Recognition**: Convert spoken input into text for hands-free interaction.
-*   **Chat Deletion**: Delete chat sessions for privacy and clutter management.
-*   **Enhanced UI**: Modern, intuitive interface for seamless user experience.
+## Contents
+1. [Prerequisites](#prerequisites)  
+2. [Setup and Installation](#setup-and-installation)  
+   2.1 [Step 1: Clone the Repository](#step-1-clone-the-repository)  
+   2.2 [Step 2: Configure Environment Variables](#step-2-configure-environment-variables)  
+   2.3 [Step 3: Install All Dependencies](#step-3-install-all-dependencies)  
+      2.3.1 [Backend Dependencies (Node.js)](#backend-dependencies-nodejs)  
+      2.3.2 [AI Core Service Dependencies (Python)](#ai-core-service-dependencies-python)  
+      2.3.3 [Frontend Dependencies (React)](#frontend-dependencies-react)  
+3. [Running the Application](#running-the-application)  
+   3.1 [Terminal 1: Start the AI Core Service (Python)](#terminal-1-start-the-ai-core-service-python)  
+   3.2 [Terminal 2: Start the Backend Server (Node.js)](#terminal-2-start-the-backend-server-nodejs)  
+   3.3 [Terminal 3: Start the Frontend (React)](#terminal-3-start-the-frontend-react)  
+4. [Accessing the Application](#accessing-the-application)  
+5. [Key Features](#key-features)  
+6. [Dependencies](#dependencies)  
+7. [Demo Video](#demo-video)  
 
 ## Prerequisites
-
-*   **Node.js**: v16 or higher with npm.
-*   **Python**: v3.9 or higher with pip.
-*   **Git**: For cloning the repository.
-*   **MongoDB**: A running instance (local MongoDB Community Server or MongoDB Atlas).
-*   **Optional**: Ollama installed for local LLM support.
+Before you begin, ensure you have the following installed on your system:
+- Node.js (v16 or higher is recommended) and npm.
+- Python (v3.9 or higher is recommended) and pip.
+- Git.
+- MongoDB Instance: The application requires a running MongoDB database. You can use a local installation (MongoDB Community Server) or a cloud-based service like MongoDB Atlas. You will need the connection string for the setup.
 
 ## Setup and Installation
 
 ### Step 1: Clone the Repository
+First, clone the project from GitHub to your local machine.
 
-Clone the project from GitHub and navigate to the project directory:
-
-```bash
+bash
 git clone <your-repository-url>
 cd FusedChatbotNew
 
-Step 2: Configure Environment Variables
-Backend (Node.js)
 
-Navigate to the server directory and create a .env file by copying the example:
+### Step 2: Configure Environment Variables
+The backend server requires a .env file for database connection strings and secret keys. An example file is provided.
 
+Navigate to the server directory:
+
+bash
 cd server
-# Linux/macOS
+
+
+Create a .env file by copying the provided example:
+
+bash
+# On Linux/macOS
 cp .env.example .env
-# Windows
+
+# On Windows
 copy .env.example .env
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
 
-Edit the server/.env file with your configuration:
 
-DB_CONNECT=<YOUR_MONGODB_CONNECTION_STRING>
-JWT_KEY=<YOUR_OPENAI_API_KEY>
-PYTHON_AI_CORE_SERVICE_URL=http://localhost:8000
-PORT=5001
-GEMINI_API_KEY=<YOUR_GEMINI_API_KEY>
-GROQ_API_KEY=<YOUR_GROQ_API_KEY>
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Env
-IGNORE_WHEN_COPYING_END
-AI Core Service (Python)
+Open the newly created server/.env file with a text editor and fill in the required values:
 
-Navigate to the ai_core_service directory and create a .env file:
 
-cd server/ai_core_service
-# Linux/macOS
-cp .env.example .env
-# Windows
-copy .env.example .env
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
+DB_CONNECT=YOUR_MONGODB_CONNECTION_STRING_HERE
+JWT_SECRET=CREATE_A_STRONG_RANDOM_SECRET_KEY
+OPENAI_API_KEY=YOUR_OPENAI_API_KEY_HERE
+# Add any other keys as needed
 
-Edit the server/ai_core_service/.env file:
 
-GEMINI_API_KEY=<YOUR_GEMINI_API_KEY>
-GROQ_API_KEY=<YOUR_GROQ_API_KEY>
-OLLAMA_BASE_URL=http://localhost:11434
-DEFAULT_OLLAMA_MODEL=llama3
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Env
-IGNORE_WHEN_COPYING_END
-Step 3: Install Dependencies
-Backend (Node.js)
+### Step 3: Install All Dependencies
+The project is split into three parts, each with its own dependencies. You must install them all.
 
-In the server directory, install the Node.js dependencies:
+#### Backend Dependencies (Node.js)
+Make sure you are in the server directory. (If you are in the project root, run cd server).
 
-cd server
+Install the required npm packages:
+
+bash
 npm install
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
-AI Core Service (Python)
 
-Navigate to the ai_core_service directory, create a virtual environment, and install the Python dependencies:
 
-cd server/ai_core_service
+#### AI Core Service Dependencies (Python)
+Navigate to the ai_core_service directory from the server directory:
+
+bash
+cd ai_core_service
+
+
+Create and activate a Python virtual environment. This isolates the project’s Python packages.
+
+bash
+# Create the virtual environment
 python -m venv venv
 
-# Activate virtual environment
-# Windows (PowerShell)
+# Activate the environment
+# On Windows (PowerShell)
 .\venv\Scripts\Activate.ps1
-# Windows (Command Prompt)
+
+# On Windows (Command Prompt)
 .\venv\Scripts\activate.bat
-# Linux/macOS
+
+# On Linux/macOS
 source venv/bin/activate
 
+
+You will know the virtual environment is active when you see (venv) at the beginning of your command prompt.
+
+With the virtual environment active, install the required Python packages:
+
+bash
 pip install -r requirements.txt
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
-Frontend (React)
 
-Navigate to the client directory and install the React dependencies:
 
-cd ../../client
+#### Frontend Dependencies (React)
+Navigate to the client directory from the project’s root:
+
+bash
+# If you are in server/ai_core_service/, go back to the root first
+cd ../../
+
+# Now go to the client directory
+cd client
+
+
+Install the required npm packages:
+
+bash
 npm install
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
-Running the Application
 
-Run the three services in separate terminal windows.
 
-Terminal 1: AI Core Service (Python)
+## Running the Application
+To run the full application, you must start all three services concurrently. Open three separate terminal windows or tabs for this process.
+
+### Terminal 1: Start the AI Core Service (Python)
+Navigate to the server directory:
+
+bash
 cd path/to/FusedChatbotNew/server
 
-# Activate virtual environment
-# Windows (PowerShell)
+
+Activate the Python virtual environment:
+
+bash
+# On Windows (PowerShell)
 .\ai_core_service\venv\Scripts\Activate.ps1
-# Linux/macOS
+
+# On Linux/macOS
 source ai_core_service/venv/bin/activate
 
+
+Start the AI service:
+
+bash
 python -m ai_core_service.app
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
 
-The service runs on http://127.0.0.1:8000.
 
-Terminal 2: Backend Server (Node.js)
+The service will start, typically listening on http://127.0.0.1:8000. Keep this terminal running.
+
+### Terminal 2: Start the Backend Server (Node.js)
+In a new terminal, navigate to the server directory:
+
+bash
 cd path/to/FusedChatbotNew/server
+
+
+Start the Node.js server:
+
+bash
 node server.js
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
 
-The server runs on http://localhost:5001.
 
-Terminal 3: Frontend (React)
+The server will connect to MongoDB and start listening on a port, typically 5001. The console will show a message like "Server running on port 5001" and "MongoDB connected". Keep this terminal running.
+
+### Terminal 3: Start the Frontend (React)
+In a third terminal, navigate to the client directory:
+
+bash
 cd path/to/FusedChatbotNew/client
+
+
+Start the React development server:
+
+bash
 npm start
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-Bash
-IGNORE_WHEN_COPYING_END
 
-The frontend opens at http://localhost:3000.
 
-Accessing the Application
+This will automatically launch the application in your default web browser.
 
-Visit http://localhost:3000 in your browser to interact with FusedChatbotNew.
+## Accessing the Application
+Once all three services are running, the application will be available at:
 
-Contributing
+[http://localhost:3000](http://localhost:3000)
 
-Fork the repository.
+You can now interact with the FusedChatbotNew application.
 
-Create a feature branch (git checkout -b feature-name).
+## Key Features
+- *Voice Assistant:* Enables voice input and interaction with the chatbot.
+- *Chat Delete:* Allows users to delete chat history.
+- *Continue Chat:* Supports continuing previous chat sessions seamlessly.
+- *PDF Support:* Upload and interact with PDF documents.
+- *API Keys Load Balance:* Manages multiple API keys for load balancing requests.
+- *Assistance Setting:* Customizable settings for chatbot assistance behavior.
+- *Database Settings:* Configuration options for MongoDB connection and management.
 
-Commit your changes (git commit -m 'Add a new feature').
+## Dependencies
+- *Backend:* Node.js with Express, MongoDB driver, JWT for authentication, and other middleware.
+- *AI Core Service:* Python with packages for language model interaction, vector search, and API communication.
+- *Frontend:* React with state management, UI components, and API integration.
 
-Push to the branch (git push origin feature-name).
+## Demo Video
+[![Demo Video](https://img.youtube.com/vi/your-video-id/0.jpg)](https://www.youtube.com/watch?v=your-video-id)
 
-Open a pull request.
+Click the image above to watch the demo video.
 
-License
-
-This project is licensed under the MIT License.
-
-IGNORE_WHEN_COPYING_START
-content_copy
-download
-Use code with caution.
-IGNORE_WHEN_COPYING_END
+*(Replace your-video-id with the actual YouTube video ID of your project demo.)*
